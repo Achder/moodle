@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+
+const isProduction = import.meta.env.MODE === "production";
 ---
 
 <html lang="en">
@@ -9,6 +11,19 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
+
+    {
+      isProduction && (
+        <>
+          <script
+            is:inline
+            defer
+            src="https://analytics.meerpohl.dev/script.js"
+            data-website-id="fb5ec53a-fb0a-4130-8845-47ea970c70c7"
+          />
+        </>
+      )
+    }
   </head>
 
   <body class="font-bold text-dark bg-brand overflow-x-hidden">
