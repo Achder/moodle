@@ -48,7 +48,7 @@ const isProduction = import.meta.env.MODE === "production";
           <label class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md">
             Rating
             <input
-              class="shadow-lg"
+              class="shadow-lg rounded-full"
               type="range"
               id="rating"
               name="rating"
@@ -79,7 +79,7 @@ const isProduction = import.meta.env.MODE === "production";
         </fieldset>
         <button
           type="submit"
-          class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-xs text-3xl shadow-lg"
+          class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all"
           >Save</button
         >
       </section>
@@ -148,7 +148,7 @@ const isProduction = import.meta.env.MODE === "production";
   input[type="range"]::-webkit-slider-runnable-track {
     -webkit-appearance: none;
     background-color: var(--color-dark);
-    border-radius: 2px;
+    border-radius: 100vmax;
     height: var(--height);
     outline: var(--outline) solid var(--color-brand);
     outline-offset: calc(-2 * var(--outline));
@@ -160,7 +160,7 @@ const isProduction = import.meta.env.MODE === "production";
     background-color: var(--color-brand);
     height: var(--height);
     width: var(--height);
-    border-radius: 2px;
+    border-radius: 100vmax;
     outline: var(--outline) solid var(--color-dark);
     outline-offset: calc(-1 * var(--outline));
     position: relative;
