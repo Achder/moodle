@@ -1,0 +1,19 @@
+---
+type Props = {
+    href: string
+    class?: string
+}
+
+const { href, class: className, ...rest } = Astro.props
+---
+
+<a
+    href={href}
+    class:list={[
+        className,
+        'underline underline-offset-2 hover:no-underline hover:text-white whitespace-nowrap font-bold tracking-widest transition-colors',
+    ]}
+    {...rest}
+>
+    <slot />
+</a>
