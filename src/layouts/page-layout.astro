@@ -1,0 +1,51 @@
+---
+import "../styles/global.css";
+import SocialNav from "../components/SocialNav.astro";
+import Logo from "../components/icons/Logo.astro";
+import StyledLink from "../components/StyledLink.astro";
+import { Font } from 'astro:assets';
+
+const isProduction = import.meta.env.MODE === "production";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>Astro</title>
+
+    {
+      isProduction && (
+        <>
+          <script
+            is:inline
+            defer
+            src="https://analytics.meerpohl.dev/script.js"
+            data-website-id="fb5ec53a-fb0a-4130-8845-47ea970c70c7"
+          />
+        </>
+      )
+    }
+
+    <Font cssVariable='--font-moodle' preload />
+  </head>
+
+  <body class="font-bold text-dark bg-brand overflow-x-hidden">
+    <main class="max-w-lg mx-auto p-4 grid gap-10">
+      <div class="flex justify-between items-center">
+        <a href="/"><Logo/></a>
+        <SocialNav class="flex gap-8 justify-end"/>
+      </div>
+
+      <slot/>
+
+      <footer class="flex gap-4 py-4 justify-center justify-self-end sm:justify-end text-dark">
+        ⓒ Thomas Meerpohl {new Date().getFullYear()}
+        <StyledLink href="/imprint">Imprint</StyledLink>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+---
+import PageLayout from '../layouts/page-layout.astro'
+import Heading from '../components/Heading.astro'
+import StyledLink from '../components/StyledLink.astro'
+---
+
+<PageLayout
+    description="Imprint including address and contact info, as well as links to social media and job platforms."
+>
+    <h1 class="text-8xl sm:text-9xl font-extrabold text-dark text-shadow-lg text-highlight text-shadow-highlight font-heading">Imprint</h1>
+
+    <div class="grid text-lg text-shadow-lg">
+        <p class="text-2xl font-bold">Thomas Meerpohl</p>
+        <p>Nieritz Straße 7</p>
+        <p>01097 Dresden</p>
+        <p>Germany</p>
+    </div>
+
+    <div class="grid text-md">
+        <StyledLink href="mailto:thomas.meerpohl@gmail.com"> thomas.meerpohl@gmail.com </StyledLink>
+        <StyledLink href="https://www.linkedin.com/in/thomas-meerpohl-0609b619b/"> LinkedIn </StyledLink>
+        <StyledLink href="https://www.freelancermap.de/profil/thomas-meerpohl"> FreelancerMap </StyledLink>
+        <StyledLink href="https://github.com/Achder">Github</StyledLink>
+    </div>
+</PageLayout>

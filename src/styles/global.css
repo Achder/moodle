@@ -5,4 +5,7 @@
   --color-dark: oklch(0.15 0.09 282.86);
   --color-bad: oklch(69.226% 0.3069 52.643);
   --color-good: oklch(0.85 0.37 145.71);
+  --color-highlight: oklch(0.47 0.32 263.97);
+
+  --font-heading: var(--font-moodle);
 }
