@@ -1,13 +1,14 @@
 ---
 import PageLayout from "../layouts/page-layout.astro";
 import StyledLink from "../components/StyledLink.astro";
+import Bluesky from "../components/icons/Bluesky.astro";
 ---
 
 <PageLayout
   description="Imprint including address and contact info, as well as links to social media and job platforms."
 >
   <h1
-    class="text-8xl sm:text-9xl font-extrabold text-shadow-lg text-highlight text-shadow-highlight font-heading"
+    class="text-8xl sm:text-9xl font-extrabold text-shadow-lg text-highlight text-shadow-highlight font-heading text-center"
   >
     Who?
   </h1>
@@ -19,9 +20,17 @@ import StyledLink from "../components/StyledLink.astro";
     <p>Germany</p>
   </div>
 
+  <div>
+    Visit my
+    <StyledLink href="http://meerpohl.dev"> homepage </StyledLink>
+    for some fun SVG generators!
+  </div>
   <div class="grid text-md">
     <StyledLink href="mailto:thomas.meerpohl@gmail.com">
       thomas.meerpohl@gmail.com
+    </StyledLink>
+    <StyledLink href="https://bsky.app/profile/meerpohl.dev">
+      <span>Bluesky</span>
     </StyledLink>
     <StyledLink href="https://www.linkedin.com/in/thomas-meerpohl-0609b619b/">
       LinkedIn
