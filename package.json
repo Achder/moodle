@@ -12,7 +12,8 @@
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.11.0",
     "colorjs.io": "^0.5.2",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "vite-plugin-qrcode": "^0.3.0"
   },
   "engines": {
     "node": ">=20.0.0"

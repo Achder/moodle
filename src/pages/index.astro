@@ -3,60 +3,59 @@ import PageLayout from "../layouts/page-layout.astro";
 ---
 
 <PageLayout>
-  <h1 class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4">
-        Moodle
-        <p class="text-4xl text-dark font-extrabold text-shadow-lg font-sans">
-          Rate your day!
-        </p>
-      </h1>
+  <h1
+    class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4 text-center"
+  >
+    Moodle
+  </h1>
 
-      <section class="grid gap-8">
-        <fieldset class="grid gap-2">
-          <p
-            class="text-8xl sm:text-9xl grid place-content-center text-shadow-highlight tabular-nums text-shadow-lg font-heading text-highlight font-extrabold"
-            id="rating-number"
-          >
-            0
-          </p>
+  <p
+    class="text-8xl sm:text-9xl grid place-content-center text-shadow-highlight tabular-nums text-shadow-lg font-heading text-highlight font-extrabold"
+    id="rating-number"
+  >
+    0
+  </p>
 
-          <label class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md">
-            Rating
-            <input
-              class="shadow-lg rounded-full"
-              type="range"
-              id="rating"
-              name="rating"
-              min="0"
-              max="10"
-              step="0.001"
-            />
-          </label>
+  <section class="grid gap-8">
+    <fieldset class="grid gap-2">
+      <label class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md">
+        Rating
+        <input
+          class="shadow-lg rounded-full"
+          type="range"
+          id="rating"
+          name="rating"
+          min="0"
+          max="10"
+          step="0.001"
+        />
+      </label>
 
-          <label class="grid gap-1 text-shadow-md">
-            Date
-            <input
-              id="date"
-              type="date"
-              name="date"
-              class="rounded-xs border-4 border-dark py-2 px-4 shadow-lg"
-            />
-          </label>
+      <label class="grid gap-1 text-shadow-md">
+        Date
+        <input
+          id="date"
+          type="date"
+          name="date"
+          class="rounded-xs border-4 border-dark py-2 px-4 shadow-lg"
+        />
+      </label>
 
-          <label class="grid gap-1 text-shadow-md">
-            Notes (optional)
-            <input
-              type="text"
-              name="notes"
-              class="rounded-xs border-4 border-dark py-2 px-4 shadow-lg"
-            />
-          </label>
-        </fieldset>
-        <button
-          type="submit"
-          class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all"
-          >Save</button
-        >
-      </section>
+      <label class="grid gap-1 text-shadow-md">
+        Notes (optional)
+        <input
+          type="text"
+          name="notes"
+          class="rounded-xs border-4 border-dark py-2 px-4 shadow-lg"
+        />
+      </label>
+    </fieldset>
+    <button
+      type="submit"
+      class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all"
+      >Save</button
+    >
+  </section>
 </PageLayout>
 
 <script>

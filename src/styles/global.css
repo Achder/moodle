@@ -8,4 +8,5 @@
   --color-highlight: oklch(0.47 0.32 263.97);
 
   --font-heading: var(--font-moodle);
+  --text-8xl: 5.5rem;
 }
