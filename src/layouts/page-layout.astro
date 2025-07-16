@@ -17,8 +17,8 @@ const isProduction = import.meta.env.MODE === "production";
     <meta name="generator" content={Astro.generator} />
 
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/favicon.ico" color="#000000" />
-    <meta name="theme-color" content="#000000" />
+    <link rel="mask-icon" href="/favicon.ico" color="oklch(0.85 0.2 84.36)" />
+    <meta name="theme-color" content="oklch(0.85 0.2 84.36)" />
     <meta name="description" content="Moodle - The Mood Tracker" />
 
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
@@ -62,7 +62,6 @@ const isProduction = import.meta.env.MODE === "production";
 
 <script>
   import { registerSW } from "virtual:pwa-register";
-  import Color from "colorjs.io";
 
   const updateSW = registerSW({
     onNeedRefresh() {
@@ -86,11 +85,4 @@ const isProduction = import.meta.env.MODE === "production";
       registration?.update();
     }
   });
-
-  const rootStyle = getComputedStyle(document.documentElement);
-  const brand = new Color(rootStyle.getPropertyValue("--color-brand"));
-  const metaThemeColor = document.querySelector(
-    'meta[name="theme-color"]'
-  )! as HTMLMetaElement;
-  metaThemeColor.content = brand.toString();
 </script>
