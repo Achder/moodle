@@ -118,9 +118,9 @@ import PageLayout from "../layouts/page-layout.astro";
         bg.toString()
       );
 
-      // metaThemeColor.content = bg
-      //   .to("srgb", { inGamut: true })
-      //   .toString({ format: "hex" });
+      metaThemeColor.content = bg
+        .to("srgb", { inGamut: true })
+        .toString({ format: "hex" });
     });
 
     rating.dispatchEvent(new Event("input"));
