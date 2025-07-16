@@ -105,6 +105,7 @@ import PageLayout from "../layouts/page-layout.astro";
         "--color-brand",
         bg.toString()
       );
+        .to("srgb", { inGamut: true })
     });
 
     rating.dispatchEvent(new Event("input"));
