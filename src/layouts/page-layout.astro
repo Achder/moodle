@@ -63,13 +63,12 @@ const isProduction = import.meta.env.MODE === "production";
 <script>
   import { registerSW } from "virtual:pwa-register";
 
-  registerSW({
-    immediate: true,
-    onRegisteredSW(swScriptUrl) {
-      console.log("SW registered: ", swScriptUrl);
+  const updateSW = registerSW({
+    onNeedRefresh() {
+      updateSW(true);
     },
     onOfflineReady() {
-      console.log("PWA application ready to work offline");
+      console.log("App ready for offline use");
     },
   });
 </script>
