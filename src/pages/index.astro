@@ -46,6 +46,7 @@ import PageLayout from "../layouts/page-layout.astro";
       <label class="grid gap-1 text-shadow-md fadeIn">
         Notes (max. 50 characters)
         <input
+          id="notes"
           type="text"
           name="notes"
           maxlength="50"
@@ -56,6 +57,7 @@ import PageLayout from "../layouts/page-layout.astro";
   </form>
 
   <button
+    id="submit"
     type="submit"
     form="rating-form"
     class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all fadeIn"
@@ -67,8 +69,18 @@ import PageLayout from "../layouts/page-layout.astro";
   import Color from "colorjs.io";
   import { mixN } from "../utils/color";
   import { fadeIn } from "../utils/animation";
-  import { z } from "astro/zod";
-  import localforage from "localforage";
+  import { db, RatingSchema, DateSchema } from "../utils/db";
+  import { format } from "date-fns";
+
+  const metaThemeColor = document.querySelector(
+    'meta[name="theme-color"]'
+  )! as HTMLMetaElement;
+  const ratingNumber = document.getElementById("rating-number")!;
+  const rating = document.getElementById("rating")! as HTMLInputElement;
+  const date = document.getElementById("date")! as HTMLInputElement;
+  const notes = document.getElementById("notes")! as HTMLInputElement;
+  const form = document.getElementById("rating-form")! as HTMLFormElement;
+  const submit = document.getElementById("submit")! as HTMLButtonElement;
 
   fadeIn(".fadeIn", undefined, {
     startOffset: 50,
@@ -76,38 +88,22 @@ import PageLayout from "../layouts/page-layout.astro";
     stagger: 0.075,
   });
 
-  const ratingSchema = z.object({
-    rating: z.number(),
-    date: z.string().date(),
-    notes: z.string().optional(),
-  });
-
-  type RatingData = z.infer<typeof ratingSchema>;
-
-  function getFormattedDate(date: Date) {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
+  function setInput(
+    element: HTMLInputElement,
+    value: string,
+    eventType = "input"
+  ) {
+    element.value = value;
+    element.dispatchEvent(new Event(eventType));
   }
 
   function initRatingSlider() {
-    const ratingNumber = document.getElementById("rating-number")!;
-    const rating = document.getElementById("rating")! as HTMLInputElement;
-    const metaThemeColor = document.querySelector(
-      'meta[name="theme-color"]'
-    )! as HTMLMetaElement;
-
     rating.addEventListener("input", () => {
       const value = rating.valueAsNumber;
       const max = Number(rating.max);
       const t = value / max;
 
       ratingNumber.innerText = `${value.toFixed(1)}`;
-      if ("vibrate" in navigator) {
-        navigator.vibrate(20);
-      }
 
       const rootStyle = getComputedStyle(document.documentElement);
       const bad = new Color(rootStyle.getPropertyValue("--color-bad"));
@@ -126,26 +122,76 @@ import PageLayout from "../layouts/page-layout.astro";
     rating.dispatchEvent(new Event("input"));
   }
 
-  async function initDate() {
-    const date = document.getElementById("date")! as HTMLInputElement;
-    const formattedToday = getFormattedDate(new Date());
-    const stored = await localforage.getItem<RatingData>(formattedToday);
+  async function initInputs() {
+    try {
+      const today = format(new Date(), "yyyy-MM-dd");
+      const url = new URL(window.location.href);
+      const urlDate = DateSchema.safeParse(url.searchParams.get("date"));
 
-    date.value = formattedToday;
+      // no date in url - set to today
+      if (!urlDate.success) {
+        setInput(date, today);
+        return;
+      }
+
+      // reset url params
+      url.search = "";
+      if (urlDate.data) {
+        url.searchParams.set("date", urlDate.data);
+      }
+      window.history.replaceState({}, "", url.toString());
+
+      // set date input only if it's not already set (otherwise infinite loop)
+      if (date.value !== urlDate.data) {
+        setInput(date, urlDate.data);
+      }
+
+      const data = await db.ratings.get(urlDate.data);
+      if (!data) {
+        setInput(rating, "5");
+        setInput(notes, "");
+        submit.textContent = "Save";
+      } else {
+        setInput(rating, data.rating.toString());
+        setInput(notes, data.notes ?? "");
+        submit.textContent = "Edit";
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async function initForm() {
-    const form = document.getElementById("rating-form")! as HTMLFormElement;
-    form?.addEventListener("submit", async () => {
+    form?.addEventListener("submit", async (event) => {
       const formData = new FormData(form);
-      const data = ratingSchema.parse(Object.fromEntries(formData.entries()));
-      await localforage.setItem(data.date, data);
+      const json = Object.fromEntries(formData.entries());
+      const inputs = RatingSchema.safeParse(json);
+
+      if (!inputs.success) {
+        event.preventDefault();
+        console.error(inputs.error);
+        return;
+      }
+
+      await db.ratings.put(inputs.data);
     });
   }
 
-  initRatingSlider();
-  initDate();
-  initForm();
+  function initDate() {
+    date.addEventListener("change", async () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("date", date.value);
+      window.history.pushState({}, "", url);
+      await initInputs();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    initRatingSlider();
+    initDate();
+    await initInputs();
+    await initForm();
+  });
 </script>
 
 <style>

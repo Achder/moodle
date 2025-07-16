@@ -13,8 +13,9 @@
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.11.0",
     "colorjs.io": "^0.5.2",
+    "date-fns": "^4.1.0",
+    "dexie": "^4.0.11",
     "gsap": "^3.13.0",
-    "localforage": "^1.10.0",
     "tailwindcss": "^4.1.11",
     "vite-plugin-qrcode": "^0.3.0"
   },
