@@ -28,7 +28,7 @@ export default defineConfig({
       manifest: {
         name: "Moodle",
         short_name: "Moodle",
-        theme_color: "#ffffff",
+        theme_color: "oklch(0.85 0.2 84.36)",
         icons: [
           {
             src: "pwa-192x192.png",
