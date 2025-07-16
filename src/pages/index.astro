@@ -16,7 +16,7 @@ import PageLayout from "../layouts/page-layout.astro";
     0
   </p>
 
-  <section class="grid gap-8">
+  <form class="grid gap-8" id="rating-form">
     <fieldset class="grid gap-2">
       <label
         class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md fadeIn"
@@ -52,18 +52,21 @@ import PageLayout from "../layouts/page-layout.astro";
         />
       </label>
     </fieldset>
+
     <button
       type="submit"
       class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all fadeIn"
       >Save</button
     >
-  </section>
+  </form>
 </PageLayout>
 
 <script>
   import Color from "colorjs.io";
   import { mixN } from "../utils/color";
   import { fadeIn } from "../utils/animation";
+  import { z } from "astro/zod";
+  import localforage from "localforage";
 
   fadeIn(".fadeIn", undefined, {
     startOffset: 50,
@@ -71,19 +74,28 @@ import PageLayout from "../layouts/page-layout.astro";
     stagger: 0.075,
   });
 
-  function getFormattedToday() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
+  const ratingSchema = z.object({
+    rating: z.number(),
+    date: z.string().date(),
+    notes: z.string().optional(),
+  });
+
+  type RatingData = z.infer<typeof ratingSchema>;
+
+  function getFormattedDate(date: Date) {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
   }
 
-  function init() {
+  function initRatingSlider() {
     const ratingNumber = document.getElementById("rating-number")!;
     const rating = document.getElementById("rating")! as HTMLInputElement;
-    const date = document.getElementById("date")! as HTMLInputElement;
+    const metaThemeColor = document.querySelector(
+      'meta[name="theme-color"]'
+    )! as HTMLMetaElement;
 
     rating.addEventListener("input", () => {
       const value = rating.valueAsNumber;
@@ -105,15 +117,35 @@ import PageLayout from "../layouts/page-layout.astro";
         "--color-brand",
         bg.toString()
       );
+
+      metaThemeColor.content = bg
         .to("srgb", { inGamut: true })
+        .toString({ format: "hex" });
     });
 
     rating.dispatchEvent(new Event("input"));
-
-    date.value = getFormattedToday();
   }
 
-  init();
+  async function initDate() {
+    const date = document.getElementById("date")! as HTMLInputElement;
+    const formattedToday = getFormattedDate(new Date());
+    const stored = await localforage.getItem<RatingData>(formattedToday);
+
+    date.value = formattedToday;
+  }
+
+  async function initForm() {
+    const form = document.getElementById("rating-form")! as HTMLFormElement;
+    form?.addEventListener("submit", async () => {
+      const formData = new FormData(form);
+      const data = ratingSchema.parse(Object.fromEntries(formData.entries()));
+      await localforage.setItem(data.date, data);
+    });
+  }
+
+  initRatingSlider();
+  initDate();
+  initForm();
 </script>
 
 <style>
