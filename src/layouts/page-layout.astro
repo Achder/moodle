@@ -71,4 +71,18 @@ const isProduction = import.meta.env.MODE === "production";
       console.log("App ready for offline use");
     },
   });
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      console.log("[PWA] Controller changed → reloading");
+      window.location.reload();
+    });
+  }
+
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "visible") {
+      const registration = await navigator.serviceWorker.getRegistration();
+      registration?.update();
+    }
+  });
 </script>
