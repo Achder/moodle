@@ -82,11 +82,13 @@ import PageLayout from "../layouts/page-layout.astro";
   const form = document.getElementById("rating-form")! as HTMLFormElement;
   const submit = document.getElementById("submit")! as HTMLButtonElement;
 
-  fadeIn(".fadeIn", undefined, {
-    startOffset: 50,
-    duration: 0.75,
-    stagger: 0.075,
-  });
+  function animate() {
+    fadeIn(".fadeIn", undefined, {
+      startOffset: 50,
+      duration: 0.75,
+      stagger: 0.075,
+    });
+  }
 
   function setInput(
     element: HTMLInputElement,
@@ -163,17 +165,18 @@ import PageLayout from "../layouts/page-layout.astro";
 
   async function initForm() {
     form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
       const formData = new FormData(form);
       const json = Object.fromEntries(formData.entries());
       const inputs = RatingSchema.safeParse(json);
 
       if (!inputs.success) {
-        event.preventDefault();
         console.error(inputs.error);
         return;
       }
 
       await db.ratings.put(inputs.data);
+      animate();
     });
   }
 
@@ -187,6 +190,7 @@ import PageLayout from "../layouts/page-layout.astro";
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
+    animate();
     initRatingSlider();
     initDate();
     await initInputs();

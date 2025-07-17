@@ -4,13 +4,21 @@ export function fadeIn(
   elementSelector: string,
   scrollTriggerSelector?: string,
   options?: {
+    startOpacity?: number;
     startOffset?: number | string;
     scrub?: boolean;
     duration?: number;
     stagger?: number;
   }
 ) {
-  const { startOffset, scrub, duration = 0.3, stagger = 0.1 } = options ?? {};
+  const {
+    startOpacity = 0,
+    startOffset = "100%",
+    scrub,
+    duration = 0.3,
+    stagger = 0.1,
+  } = options ?? {};
+
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
@@ -27,8 +35,8 @@ export function fadeIn(
     gsap.fromTo(
       elementSelector,
       {
-        opacity: 0,
-        y: startOffset ?? "100%",
+        opacity: startOpacity,
+        y: startOffset,
         filter: "blur(2px) hue-rotate(180deg)",
       },
       {
