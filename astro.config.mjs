@@ -18,6 +18,9 @@ export default defineConfig({
       },
     ],
   },
+  devToolbar: {
+    enabled: false,
+  },
   integrations: [
     AstroPWA({
       mode: "development",

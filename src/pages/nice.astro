@@ -1,0 +1,42 @@
+---
+import PageLayout from "../layouts/page-layout.astro";
+---
+
+<PageLayout
+  description="Imprint including address and contact info, as well as links to social media and job platforms."
+>
+  <h1
+    class="text-8xl sm:text-9xl font-extrabold text-shadow-lg text-highlight text-shadow-highlight font-heading text-center fade"
+  >
+    Nice!
+  </h1>
+</PageLayout>
+
+<script>
+  import { fade } from "../utils/animation";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    await fade(".fade", {
+      startOffset: -50,
+    });
+
+    const rootStyle = getComputedStyle(document.documentElement);
+    const brand = rootStyle.getPropertyValue("--color-brand");
+
+    setTimeout(async () => {
+      await fade(".fade", {
+        startOffset: 0,
+        endOffset: 50,
+        startOpacity: 1,
+        endOpacity: 0,
+      });
+      location.href = `/?bg=${encodeURIComponent(brand)}`;
+    }, 200);
+  });
+</script>
+
+<style>
+  .fade {
+    opacity: 0;
+  }
+</style>

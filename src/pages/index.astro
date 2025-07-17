@@ -4,13 +4,13 @@ import PageLayout from "../layouts/page-layout.astro";
 
 <PageLayout>
   <h1
-    class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4 text-center fadeIn"
+    class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4 text-center fade"
   >
     Moodle
   </h1>
 
   <p
-    class="text-8xl sm:text-9xl grid place-content-center text-shadow-highlight tabular-nums text-shadow-lg font-heading text-highlight font-extrabold fadeIn"
+    class="text-8xl sm:text-9xl grid place-content-center text-shadow-highlight tabular-nums text-shadow-lg font-heading text-highlight font-extrabold fade"
     id="rating-number"
   >
     0
@@ -18,9 +18,7 @@ import PageLayout from "../layouts/page-layout.astro";
 
   <form class="grid gap-8" id="rating-form">
     <fieldset class="grid gap-2">
-      <label
-        class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md fadeIn"
-      >
+      <label class="grid gap-1 grid-cols-[minmax(0, 1fr)] text-shadow-md fade">
         Rating
         <input
           class="shadow-lg rounded-full"
@@ -33,7 +31,7 @@ import PageLayout from "../layouts/page-layout.astro";
         />
       </label>
 
-      <label class="grid gap-1 text-shadow-md fadeIn">
+      <label class="grid gap-1 text-shadow-md fade">
         Date
         <input
           id="date"
@@ -43,7 +41,7 @@ import PageLayout from "../layouts/page-layout.astro";
         />
       </label>
 
-      <label class="grid gap-1 text-shadow-md fadeIn">
+      <label class="grid gap-1 text-shadow-md fade">
         Notes (max. 50 characters)
         <input
           id="notes"
@@ -60,7 +58,7 @@ import PageLayout from "../layouts/page-layout.astro";
     id="submit"
     type="submit"
     form="rating-form"
-    class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all fadeIn"
+    class="bg-dark text-brand hover:bg-brand hover:text-dark border-4 border-dark cursor-pointer font-extrabold py-2 px-4 rounded-full text-3xl shadow-lg active:shadow-none duration-50 active:scale-99 transition-all fade"
     >Save</button
   >
 </PageLayout>
@@ -68,7 +66,7 @@ import PageLayout from "../layouts/page-layout.astro";
 <script>
   import Color from "colorjs.io";
   import { mixN } from "../utils/color";
-  import { fadeIn } from "../utils/animation";
+  import { fade } from "../utils/animation";
   import { db, RatingSchema, DateSchema } from "../utils/db";
   import { format } from "date-fns";
 
@@ -82,21 +80,15 @@ import PageLayout from "../layouts/page-layout.astro";
   const form = document.getElementById("rating-form")! as HTMLFormElement;
   const submit = document.getElementById("submit")! as HTMLButtonElement;
 
-  function animate() {
-    fadeIn(".fadeIn", undefined, {
-      startOffset: 50,
-      duration: 0.75,
-      stagger: 0.075,
-    });
-  }
-
   function setInput(
     element: HTMLInputElement,
     value: string,
-    eventType = "input"
+    eventType?: string
   ) {
     element.value = value;
-    element.dispatchEvent(new Event(eventType));
+    if (eventType) {
+      element.dispatchEvent(new Event(eventType));
+    }
   }
 
   function initRatingSlider() {
@@ -120,8 +112,6 @@ import PageLayout from "../layouts/page-layout.astro";
 
       metaThemeColor.content = bg.toString();
     });
-
-    rating.dispatchEvent(new Event("input"));
   }
 
   async function initInputs() {
@@ -129,33 +119,23 @@ import PageLayout from "../layouts/page-layout.astro";
       const today = format(new Date(), "yyyy-MM-dd");
       const url = new URL(window.location.href);
       const urlDate = DateSchema.safeParse(url.searchParams.get("date"));
+      const currentDate = urlDate.success ? urlDate.data : today;
 
-      // no date in url - set to today
-      if (!urlDate.success) {
-        setInput(date, today);
-        return;
-      }
+      setInput(date, currentDate);
 
       // reset url params
       url.search = "";
-      if (urlDate.data) {
-        url.searchParams.set("date", urlDate.data);
-      }
+      url.searchParams.set("date", currentDate);
       window.history.replaceState({}, "", url.toString());
 
-      // set date input only if it's not already set (otherwise infinite loop)
-      if (date.value !== urlDate.data) {
-        setInput(date, urlDate.data);
-      }
-
-      const data = await db.ratings.get(urlDate.data);
+      const data = await db.ratings.get(currentDate);
       if (!data) {
-        setInput(rating, "5");
-        setInput(notes, "");
+        setInput(rating, "5", "input");
+        setInput(notes, "", "input");
         submit.textContent = "Save";
       } else {
-        setInput(rating, data.rating.toString());
-        setInput(notes, data.notes ?? "");
+        setInput(rating, data.rating.toString(), "input");
+        setInput(notes, data.notes ?? "", "input");
         submit.textContent = "Edit";
       }
     } catch (error) {
@@ -176,7 +156,16 @@ import PageLayout from "../layouts/page-layout.astro";
       }
 
       await db.ratings.put(inputs.data);
-      animate();
+      await fade(".fade", {
+        startOffset: 0,
+        endOffset: 50,
+        startOpacity: 1,
+        endOpacity: 0,
+      });
+
+      const rootStyle = getComputedStyle(document.documentElement);
+      const brand = rootStyle.getPropertyValue("--color-brand");
+      location.href = `/nice?bg=${encodeURIComponent(brand)}`;
     });
   }
 
@@ -190,7 +179,10 @@ import PageLayout from "../layouts/page-layout.astro";
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    animate();
+    fade(".fade", {
+      startOffset: -50,
+    });
+
     initRatingSlider();
     initDate();
     await initInputs();
@@ -199,7 +191,7 @@ import PageLayout from "../layouts/page-layout.astro";
 </script>
 
 <style>
-  .fadeIn {
+  .fade {
     opacity: 0;
   }
 

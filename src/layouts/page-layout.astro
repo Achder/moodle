@@ -5,6 +5,8 @@ import Logo from "../components/icons/Logo.astro";
 import StyledLink from "../components/StyledLink.astro";
 import { Font } from "astro:assets";
 import { pwaInfo } from "virtual:pwa-info";
+import Stats from "../components/icons/Stats.astro";
+import List from "../components/icons/List.astro";
 
 const isProduction = import.meta.env.MODE === "production";
 ---
@@ -39,22 +41,37 @@ const isProduction = import.meta.env.MODE === "production";
     }
 
     <Font cssVariable="--font-moodle" preload />
+
+    <script is:inline>
+      const url = new URL(location.href);
+      const bgColor = url.searchParams.get("bg");
+
+      if (bgColor) {
+        document.documentElement.style.setProperty("--color-brand", bgColor);
+      }
+    </script>
   </head>
 
   <body class="font-bold text-dark bg-brand overflow-x-hidden">
-    <main class="max-w-lg mx-auto p-4 grid gap-8">
+    <main
+      class="max-w-lg mx-auto p-4 grid gap-8 min-h-dvh grid-rows-[auto_1fr_auto]"
+    >
       <div class="flex justify-between items-center">
         <a href="/"><Logo /></a>
-        <SocialNav class="flex gap-8 justify-end" />
+        <div class="flex gap-4 items-center">
+          <a href="/stats"><Stats /></a>
+          <a href="/history"><List /></a>
+        </div>
       </div>
 
       <slot />
 
-      <footer
-        class="flex gap-4 py-4 justify-center justify-self-end sm:justify-end text-dark"
-      >
-        ⓒ Thomas Meerpohl {new Date().getFullYear()}
-        <StyledLink href="/imprint">Imprint</StyledLink>
+      <footer class="flex gap-4 py-4 justify-between text-dark items-center">
+        <SocialNav class="flex gap-8 justify-end" />
+        <div class="flex gap-4">
+          ⓒ Thomas Meerpohl {new Date().getFullYear()}
+          <StyledLink href="/imprint">Imprint</StyledLink>
+        </div>
       </footer>
     </main>
   </body>
