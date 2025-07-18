@@ -102,12 +102,11 @@ import PageLayout from "../layouts/page-layout.astro";
       const good = new Color(rootStyle.getPropertyValue("--color-good"));
       const bg = mixN([bad, mid, good], t, "oklch", "oklch");
 
+      setThemeColor(bg.toString());
       document.documentElement.style.setProperty(
         "--color-brand",
         bg.toString()
       );
-
-      setThemeColor(bg);
     });
   }
 
@@ -188,10 +187,6 @@ import PageLayout from "../layouts/page-layout.astro";
 </script>
 
 <style>
-  .fade {
-    opacity: 0;
-  }
-
   input[type="range"] {
     -webkit-appearance: none;
     appearance: none;

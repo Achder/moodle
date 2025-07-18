@@ -30,10 +30,10 @@ export function mixN(
   });
 }
 
-export function setThemeColor(color: Color) {
+export function setThemeColor(color: string) {
   const metaThemeColor = document.querySelector(
     'meta[name="theme-color"]'
   )! as HTMLMetaElement;
 
-  metaThemeColor.content = color.toString();
+  metaThemeColor.content = color;
 }

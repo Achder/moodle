@@ -12,3 +12,7 @@
   --font-heading: var(--font-moodle);
   --text-8xl: 5.5rem;
 }
+
+.fade {
+  opacity: 0;
+}
