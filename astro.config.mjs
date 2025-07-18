@@ -52,12 +52,12 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: "/",
         globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
+        skipWaiting: true,
+        clientsClaim: true,
       },
       devOptions: {
         enabled: false,
-        navigateFallbackAllowlist: [/^\/$/],
       },
     }),
   ],
