@@ -64,7 +64,9 @@ const isProduction = import.meta.env.MODE === "production";
         </div>
       </div>
 
-      <slot />
+      <div class="grid gap-8 content-start">
+        <slot />
+      </div>
 
       <footer class="flex gap-4 py-4 justify-between text-dark items-center">
         <SocialNav class="flex gap-8 justify-end" />
