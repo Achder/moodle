@@ -4,7 +4,7 @@ import PageLayout from "../layouts/page-layout.astro";
 
 <PageLayout>
   <h1
-    class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4 text-center fade"
+    class="text-8xl sm:text-9xl font-extrabold text-highlight text-shadow-lg text-shadow-highlight font-heading grid gap-4 text-center fade -rotate-6"
   >
     Moodle
   </h1>
@@ -65,14 +65,11 @@ import PageLayout from "../layouts/page-layout.astro";
 
 <script>
   import Color from "colorjs.io";
-  import { mixN } from "../utils/color";
+  import { mixN, setThemeColor } from "../utils/color";
   import { fade } from "../utils/animation";
   import { db, RatingSchema, DateSchema } from "../utils/db";
   import { format } from "date-fns";
 
-  const metaThemeColor = document.querySelector(
-    'meta[name="theme-color"]'
-  )! as HTMLMetaElement;
   const ratingNumber = document.getElementById("rating-number")!;
   const rating = document.getElementById("rating")! as HTMLInputElement;
   const date = document.getElementById("date")! as HTMLInputElement;
@@ -110,7 +107,7 @@ import PageLayout from "../layouts/page-layout.astro";
         bg.toString()
       );
 
-      metaThemeColor.content = bg.toString();
+      setThemeColor(bg);
     });
   }
 

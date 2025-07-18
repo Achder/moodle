@@ -1,4 +1,5 @@
 import Color from "colorjs.io";
+import { bg } from "date-fns/locale";
 
 export function mixN(
   colors: Color[] | readonly Color[],
@@ -27,4 +28,12 @@ export function mixN(
     space,
     outputSpace,
   });
+}
+
+export function setThemeColor(color: Color) {
+  const metaThemeColor = document.querySelector(
+    'meta[name="theme-color"]'
+  )! as HTMLMetaElement;
+
+  metaThemeColor.content = color.toString();
 }
