@@ -120,7 +120,7 @@ import PageLayout from "../layouts/page-layout.astro";
       setInput(date, currentDate);
 
       // reset url params
-      url.search = "";
+      //url.search = "";
       url.searchParams.set("date", currentDate);
       window.history.replaceState({}, "", url.toString());
 
@@ -161,7 +161,8 @@ import PageLayout from "../layouts/page-layout.astro";
 
       const rootStyle = getComputedStyle(document.documentElement);
       const brand = rootStyle.getPropertyValue("--color-brand");
-      location.href = `/nice?bg=${encodeURIComponent(brand)}`;
+      const encodedBrand = encodeURIComponent(brand);
+      location.href = `/nice?bg=${encodedBrand}`;
     });
   }
 

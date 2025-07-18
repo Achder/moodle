@@ -42,15 +42,19 @@ const isProduction = import.meta.env.MODE === "production";
 
     <Font cssVariable="--font-moodle" preload />
 
-    <script>
-      import { setThemeColor } from "../utils/color";
-
+    <script is:inline>
       const url = new URL(location.href);
-      const bgColor = url.searchParams.get("bg");
+      const bg = url.searchParams.get("bg");
 
-      if (bgColor) {
-        document.documentElement.style.setProperty("--color-brand", bgColor);
-        setThemeColor(bgColor);
+      if (bg) {
+        document.documentElement.style.setProperty("--color-brand", bg);
+        const metaThemeColor = document.querySelector(
+          'meta[name="theme-color"]'
+        );
+
+        if (metaThemeColor) {
+          metaThemeColor.content = bg;
+        }
       }
     </script>
   </head>

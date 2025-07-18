@@ -22,6 +22,7 @@ import PageLayout from "../layouts/page-layout.astro";
 
     const rootStyle = getComputedStyle(document.documentElement);
     const brand = rootStyle.getPropertyValue("--color-brand");
+    const encodedBrand = encodeURIComponent(brand);
 
     setTimeout(async () => {
       await fade(".fade", {
@@ -30,7 +31,7 @@ import PageLayout from "../layouts/page-layout.astro";
         startOpacity: 1,
         endOpacity: 0,
       });
-      location.href = `/?bg=${encodeURIComponent(brand)}`;
+      location.href = `/?bg=${encodedBrand}`;
     }, 200);
   });
 </script>
