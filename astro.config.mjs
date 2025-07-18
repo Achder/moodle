@@ -23,7 +23,6 @@ export default defineConfig({
   },
   integrations: [
     AstroPWA({
-      mode: "development",
       base: "/",
       scope: "/",
       includeAssets: ["favicon.ico"],
@@ -55,6 +54,7 @@ export default defineConfig({
         globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
         skipWaiting: true,
         clientsClaim: true,
+        navigateFallback: null,
       },
       devOptions: {
         enabled: false,

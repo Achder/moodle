@@ -68,7 +68,9 @@ const isProduction = import.meta.env.MODE === "production";
         <slot />
       </div>
 
-      <footer class="flex gap-4 py-4 justify-between text-dark items-center">
+      <footer
+        class="grid sm:flex gap-4 py-4 justify-center sm:justify-between text-dark justify-items-center items-center"
+      >
         <SocialNav class="flex gap-8 justify-end" />
         <div class="flex gap-4">
           ⓒ Thomas Meerpohl {new Date().getFullYear()}
