@@ -1,0 +1,15 @@
+---
+type Props = astroHTML.JSX.HTMLAttributes;
+
+const { class: classes, ...pProps } = Astro.props;
+---
+
+<p
+  {...pProps}
+  class:list={[
+    "text-8xl sm:text-9xl grid place-content-center text-shadow-highlight tabular-nums text-shadow-lg font-heading text-highlight font-extrabold fade",
+    classes,
+  ]}
+>
+  <slot />
+</p>

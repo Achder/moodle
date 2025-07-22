@@ -1,0 +1,52 @@
+---
+type Props = astroHTML.JSX.InputHTMLAttributes;
+
+const { class: classes, ...inputProps } = Astro.props;
+---
+
+<label class:list={["grid gap-1 text-shadow-md fade", classes]}>
+  <slot />
+  <input
+    {...inputProps}
+    class:list={[
+      {
+        "rounded-xs py-2 px-4 border-4 border-dark shadow-lg":
+          inputProps.type !== "range",
+      },
+    ]}
+  />
+</label>
+
+<style>
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    margin: 0;
+    --height: 3rem;
+    --outline: 4px;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    background-color: var(--color-dark);
+    border-radius: 100vmax;
+    height: var(--height);
+    outline: var(--outline) solid var(--color-brand);
+    outline-offset: calc(-2 * var(--outline));
+    box-shadow: var(--shadow-lg);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    background-color: var(--color-brand);
+    height: var(--height);
+    width: var(--height);
+    border-radius: 100vmax;
+    outline: var(--outline) solid var(--color-dark);
+    outline-offset: calc(-1 * var(--outline));
+    position: relative;
+    z-index: 2;
+  }
+</style>
