@@ -7,9 +7,9 @@ import Button from "../components/button.astro";
 ---
 
 <PageLayout>
-  <Heading>Moodle</Heading>
-
-  <Rating id="rating-number">0</Rating>
+  <Heading class="fade">Moodle</Heading>
+  <Rating id="rating-number" class="fade">0</Rating>
+  <Heading id="feedback" class="fade-feedback" />
 
   <form class="grid gap-8" id="rating-form">
     <fieldset class="grid gap-2">
@@ -19,16 +19,18 @@ import Button from "../components/button.astro";
         name="rating"
         min="0"
         max="10"
-        step="0.001">Rating</Input
+        step="0.001"
+        class="fade">Rating</Input
       >
-      <Input id="date" type="date" name="date">Date</Input>
-      <Input id="notes" type="text" name="notes" maxlength="50"
+      <Input id="date" type="date" name="date" class="fade">Date</Input>
+      <Input id="notes" type="text" name="notes" maxlength="50" class="fade"
         >Notes (max. 50 characters)</Input
       >
     </fieldset>
   </form>
 
-  <Button id="submit" type="submit" form="rating-form">Save</Button>
+  <Button id="submit" class="fade" type="submit" form="rating-form">Save</Button
+  >
 </PageLayout>
 
 <script>
@@ -39,6 +41,7 @@ import Button from "../components/button.astro";
   import { format } from "date-fns";
 
   const ratingNumber = document.getElementById("rating-number")!;
+  const feedback = document.getElementById("feedback")!;
   const rating = document.getElementById("rating")! as HTMLInputElement;
   const date = document.getElementById("date")! as HTMLInputElement;
   const notes = document.getElementById("notes")! as HTMLInputElement;
@@ -107,6 +110,51 @@ import Button from "../components/button.astro";
     }
   }
 
+  function setDisplay(selector: string, display: string) {
+    for (const element of [...document.querySelectorAll(selector)]) {
+      const htmlElement = element as HTMLElement;
+      htmlElement.style.display = display;
+    }
+  }
+
+  async function animateFormAction() {
+    await fade(".fade", {
+      startOffset: 0,
+      endOffset: 50,
+      startOpacity: 1,
+      endOpacity: 0,
+    });
+
+    setDisplay(".fade", "none");
+    setDisplay(".fade-feedback", "block");
+
+    await fade(".fade-feedback", {
+      startOffset: -50,
+      endOffset: 0,
+      startOpacity: 0,
+      endOpacity: 1,
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    await fade(".fade-feedback", {
+      startOffset: 0,
+      endOffset: 50,
+      startOpacity: 1,
+      endOpacity: 0,
+    });
+
+    setDisplay(".fade-feedback", "none");
+    setDisplay(".fade", "grid");
+
+    await fade(".fade", {
+      startOffset: -50,
+      endOffset: 0,
+      startOpacity: 0,
+      endOpacity: 1,
+    });
+  }
+
   async function initForm() {
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -120,17 +168,16 @@ import Button from "../components/button.astro";
       }
 
       await db.ratings.put(inputs.data);
-      await fade(".fade", {
-        startOffset: 0,
-        endOffset: 50,
-        startOpacity: 1,
-        endOpacity: 0,
-      });
 
-      const rootStyle = getComputedStyle(document.documentElement);
-      const brand = rootStyle.getPropertyValue("--color-brand");
-      const encodedBrand = encodeURIComponent(brand);
-      location.href = `/nice?bg=${encodedBrand}`;
+      if (inputs.data.rating < 3) {
+        feedback.textContent = "Sorry...";
+      } else if (inputs.data.rating > 7) {
+        feedback.textContent = "Nice!";
+      } else {
+        feedback.textContent = "Alright";
+      }
+
+      await animateFormAction();
     });
   }
 
@@ -154,3 +201,10 @@ import Button from "../components/button.astro";
     await initForm();
   });
 </script>
+
+<style>
+  .fade-feedback {
+    opacity: 0;
+    display: none;
+  }
+</style>

@@ -4,7 +4,7 @@ type Props = astroHTML.JSX.InputHTMLAttributes;
 const { class: classes, ...inputProps } = Astro.props;
 ---
 
-<label class:list={["grid gap-1 text-shadow-md fade", classes]}>
+<label class:list={["grid gap-1 text-shadow-md", classes]}>
   <slot />
   <input
     {...inputProps}

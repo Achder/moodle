@@ -41,22 +41,6 @@ const isProduction = import.meta.env.MODE === "production";
     }
 
     <Font cssVariable="--font-moodle" preload />
-
-    <script is:inline>
-      const url = new URL(location.href);
-      const bg = url.searchParams.get("bg");
-
-      if (bg) {
-        document.documentElement.style.setProperty("--color-brand", bg);
-        const metaThemeColor = document.querySelector(
-          'meta[name="theme-color"]'
-        );
-
-        if (metaThemeColor) {
-          metaThemeColor.content = bg;
-        }
-      }
-    </script>
   </head>
 
   <body class="font-bold text-dark bg-brand overflow-x-hidden">
@@ -95,14 +79,10 @@ const isProduction = import.meta.env.MODE === "production";
     onNeedRefresh() {
       updateSW(true);
     },
-    onOfflineReady() {
-      console.log("App ready for offline use");
-    },
   });
 
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.addEventListener("controllerchange", () => {
-      console.log("[PWA] Controller changed → reloading");
       window.location.reload();
     });
   }
