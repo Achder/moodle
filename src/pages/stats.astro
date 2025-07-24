@@ -1,0 +1,75 @@
+---
+import PageLayout from "../layouts/page-layout.astro";
+import Heading from "../components/heading.astro";
+---
+
+<PageLayout>
+  <Heading class="text-center">Stats</Heading>
+  <div class="grid gap-4">
+    <label class="grid gap-1 text-shadow-md">
+      Time range
+      <select id="range" class="rounded-xs py-2 px-4 border-4 border-dark shadow-lg">
+        <option value="7">Last week</option>
+        <option value="30">Last month</option>
+        <option value="183">Last 6 months</option>
+        <option value="365">Last year</option>
+      </select>
+    </label>
+    <canvas id="stats-chart" class="bg-dark rounded-md h-72"></canvas>
+  </div>
+</PageLayout>
+
+<script>
+  import { db } from "../utils/db";
+  import { Chart, registerables } from "chart.js";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    Chart.register(...registerables);
+
+    const ctx = document.getElementById("stats-chart");
+    const range = document.getElementById("range");
+
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "Rating",
+            data: [],
+            borderColor: "currentColor",
+            backgroundColor: "currentColor",
+            fill: false,
+            tension: 0.3,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: { min: 0, max: 10 },
+        },
+      },
+    });
+
+    async function refresh(days) {
+      const all = await db.ratings.toArray();
+      const threshold = new Date();
+      threshold.setDate(threshold.getDate() - days);
+
+      const data = all
+        .map((e) => ({ ...e, dateObj: new Date(e.date) }))
+        .filter((e) => e.dateObj >= threshold)
+        .sort((a, b) => a.dateObj - b.dateObj);
+
+      chart.data.labels = data.map((d) => d.dateObj.toLocaleDateString());
+      chart.data.datasets[0].data = data.map((d) => d.rating);
+      chart.update();
+    }
+
+    range.addEventListener("change", () => {
+      refresh(Number(range.value));
+    });
+
+    refresh(Number(range.value));
+  });
+</script>
