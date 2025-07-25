@@ -2,6 +2,7 @@
 import Bluesky from "./icons/Bluesky.astro";
 import Github from "./icons/Github.astro";
 import LinkedIn from "./icons/LinkedIn.astro";
+import StyledLink from "./styled-link.astro";
 
 type Props = {
   class?: string;
@@ -11,16 +12,25 @@ const { class: className, ...rest } = Astro.props;
 ---
 
 <nav class:list={[className]} {...rest}>
-  <a href="https://www.linkedin.com/in/thomas-meerpohl-0609b619b/">
+  <StyledLink
+    href="https://www.linkedin.com/in/thomas-meerpohl-0609b619b/"
+    aria-label="Go to my linkedin page"
+  >
     <span class="sr-only">LinkedIn</span>
     <LinkedIn />
-  </a>
-  <a href="https://bsky.app/profile/meerpohl.dev">
+  </StyledLink>
+  <StyledLink
+    href="https://bsky.app/profile/meerpohl.dev"
+    aria-label="Go to my bluesky profile"
+  >
     <span class="sr-only">Bluesky</span>
     <Bluesky />
-  </a>
-  <a href="https://github.com/Achder">
+  </StyledLink>
+  <StyledLink
+    href="https://github.com/Achder"
+    aria-label="Go to my github account"
+  >
     <span class="sr-only">Github</span>
     <Github />
-  </a>
+  </StyledLink>
 </nav>

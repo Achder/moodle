@@ -1,75 +1,71 @@
 ---
 import PageLayout from "../layouts/page-layout.astro";
 import Heading from "../components/heading.astro";
+import Chart from "../components/chart.astro";
 ---
 
 <PageLayout>
-  <Heading class="text-center">Stats</Heading>
+  <Heading class="text-center fade">Stats</Heading>
   <div class="grid gap-4">
-    <label class="grid gap-1 text-shadow-md">
-      Time range
-      <select id="range" class="rounded-xs py-2 px-4 border-4 border-dark shadow-lg">
-        <option value="7">Last week</option>
-        <option value="30">Last month</option>
-        <option value="183">Last 6 months</option>
-        <option value="365">Last year</option>
-      </select>
-    </label>
-    <canvas id="stats-chart" class="bg-dark rounded-md h-72"></canvas>
+    <Chart label="Last week" listenTo="chart:week" class="fade" />
+    <Chart label="Last month" listenTo="chart:month" class="fade" />
+    <Chart label="Last year" listenTo="chart:year" class="fade" />
   </div>
 </PageLayout>
 
+<style>
+  .fade {
+    opacity: 0;
+  }
+</style>
+
 <script>
-  import { db } from "../utils/db";
-  import { Chart, registerables } from "chart.js";
+  import { format, subMonths, subWeeks, subYears } from "date-fns";
+  import { db, type ChartEventDetail, type Rating } from "../utils/db";
+  import { fade } from "../utils/animation";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    Chart.register(...registerables);
-
-    const ctx = document.getElementById("stats-chart");
-    const range = document.getElementById("range");
-
-    const chart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: "Rating",
-            data: [],
-            borderColor: "currentColor",
-            backgroundColor: "currentColor",
-            fill: false,
-            tension: 0.3,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: { min: 0, max: 10 },
-        },
-      },
+    fade(".fade", {
+      startOffset: -50,
     });
 
-    async function refresh(days) {
-      const all = await db.ratings.toArray();
-      const threshold = new Date();
-      threshold.setDate(threshold.getDate() - days);
-
-      const data = all
-        .map((e) => ({ ...e, dateObj: new Date(e.date) }))
-        .filter((e) => e.dateObj >= threshold)
-        .sort((a, b) => a.dateObj - b.dateObj);
-
-      chart.data.labels = data.map((d) => d.dateObj.toLocaleDateString());
-      chart.data.datasets[0].data = data.map((d) => d.rating);
-      chart.update();
+    function dispatch(type: string, ratings: Rating[]) {
+      window.dispatchEvent(
+        new CustomEvent<ChartEventDetail>(type, {
+          detail: {
+            ratings,
+          },
+        })
+      );
     }
 
-    range.addEventListener("change", () => {
-      refresh(Number(range.value));
-    });
+    const today = new Date();
+    const oneWeekAgo = subWeeks(today, 1);
+    const oneMonthAgo = subMonths(today, 1);
+    const oneYearAgo = subYears(today, 1);
 
-    refresh(Number(range.value));
+    const todayFormatted = format(today, "yyyy-MM-dd");
+    const oneWeekAgoFormatted = format(oneWeekAgo, "yyyy-MM-dd");
+    const oneMonthAgoFormatted = format(oneMonthAgo, "yyyy-MM-dd");
+    const oneYearAgoFormatted = format(oneYearAgo, "yyyy-MM-dd");
+
+    const lastWeek = await db.ratings
+      .where("date")
+      .between(oneWeekAgoFormatted, todayFormatted, true, true)
+      .toArray();
+
+    const lastMonth = await db.ratings
+      .where("date")
+      .between(oneMonthAgoFormatted, todayFormatted, true, true)
+      .toArray();
+
+    const lastYear = await db.ratings
+      .where("date")
+      .between(oneYearAgoFormatted, todayFormatted, true, true)
+      .toArray();
+
+    dispatch("chart:week", lastWeek);
+    dispatch("chart:month", lastMonth);
+    dispatch("chart:year", lastYear);
   });
 </script>

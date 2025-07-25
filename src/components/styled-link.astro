@@ -1,19 +1,15 @@
 ---
-type Props = {
-  href: string;
-  class?: string;
-};
+type Props = astroHTML.JSX.AnchorHTMLAttributes;
 
-const { href, class: className, ...rest } = Astro.props;
+const { class: className, ...rest } = Astro.props;
 ---
 
 <a
-  href={href}
+  {...rest}
   class:list={[
     className,
-    "underline underline-offset-2 hover:no-underline whitespace-nowrap font-bold transition-colors",
+    "underline underline-offset-2 hover:no-underline hover:text-highlight whitespace-nowrap font-bold transition-colors",
   ]}
-  {...rest}
 >
   <slot />
 </a>

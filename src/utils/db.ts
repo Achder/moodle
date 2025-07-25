@@ -19,3 +19,7 @@ export const db = new Dexie("Moodle") as Dexie & {
 db.version(1).stores({
   ratings: "date, rating, notes", // primary key "id" (for the runtime!)
 });
+
+export interface ChartEventDetail {
+  ratings: Rating[];
+}

@@ -37,3 +37,8 @@ export function setThemeColor(color: string) {
 
   metaThemeColor.content = color;
 }
+
+export function getCssColor(variable: string) {
+  const rootStyle = getComputedStyle(document.documentElement);
+  return new Color(rootStyle.getPropertyValue(variable));
+}

@@ -9,6 +9,10 @@ const { class: classes, ...inputProps } = Astro.props;
   <input
     {...inputProps}
     class:list={[
+      "focus:outline-dark focus:outline-2 focus:outline-offset-2",
+      {
+        "rounded-full": inputProps.type === "range",
+      },
       {
         "rounded-xs py-2 px-4 border-4 border-dark shadow-lg":
           inputProps.type !== "range",

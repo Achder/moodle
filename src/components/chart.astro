@@ -1,0 +1,137 @@
+---
+type Props = astroHTML.JSX.CanvasHTMLAttributes & {
+  label: string;
+  listenTo: string;
+};
+const { label, class: classes, listenTo, ...canvasProps } = Astro.props;
+---
+
+<label class:list={["grid gap-1 text-shadow-md", classes]}>
+  {label}
+  <canvas
+    {...canvasProps}
+    class="rounded-sm w-full fade border-4 border-dark shadow-md"
+    data-listen-to={listenTo}></canvas>
+</label>
+
+<script>
+  import { Chart, registerables } from "chart.js";
+  import type { ChartEventDetail } from "../utils/db";
+  import { getCssColor } from "../utils/color";
+  import { format } from "date-fns";
+
+  Chart.register(...registerables);
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const canvases = [...document.querySelectorAll("canvas")];
+
+    const dark = getCssColor("--color-dark").toString();
+    for (const canvas of canvases) {
+      const chart = new Chart<"bar", number[]>(canvas, {
+        type: "bar",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Rating",
+              data: [],
+              backgroundColor: dark,
+            },
+          ],
+        },
+        options: {
+          layout: {
+            padding: {
+              top: 32,
+              left: 24,
+              right: 24,
+              bottom: 12,
+            },
+          },
+          indexAxis: "x",
+          animations: {
+            // kill horizontal stuff explicitly
+            x: {
+              duration: 0,
+            },
+            y: {
+              duration: 0,
+            },
+
+            // redefine the default numeric group so it DOES NOT include x/width
+            numbers: {
+              type: "number",
+              properties: ["y", "base"], // only grow vertically
+              duration: 800,
+              easing: "easeOutCubic",
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false,
+                color: dark,
+                lineWidth: 1,
+                tickWidth: 1,
+              },
+              ticks: {
+                color: dark,
+              },
+              border: {
+                display: false,
+              },
+            },
+            y: {
+              min: 0,
+              max: 10,
+              grid: {
+                color: dark,
+                lineWidth: 2,
+              },
+              ticks: {
+                stepSize: 1,
+                display: false,
+              },
+              border: {
+                display: false,
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              animation: {
+                duration: 0,
+              },
+              animations: {
+                x: false,
+                y: false,
+                opacity: { duration: 0 },
+              },
+            },
+          },
+        },
+      });
+
+      const listenTo = canvas.dataset["listenTo"];
+      if (!listenTo) {
+        console.error("No valid 'listTo' event name found.");
+        return;
+      }
+
+      window.addEventListener(listenTo, (event) => {
+        const chartEvent = event as CustomEvent<ChartEventDetail>;
+        const { ratings } = chartEvent.detail;
+
+        const labels = ratings.map((r) => format(r.date, "MM.dd"));
+        const ratingValues = ratings.map((r) => r.rating);
+
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = ratingValues;
+        chart.update();
+      });
+    }
+  });
+</script>
