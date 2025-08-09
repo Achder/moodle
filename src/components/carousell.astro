@@ -2,13 +2,7 @@
 
 ---
 
-<div class="grid gap-4">
-  <div class="flex gap-4 justify-center items-center">
-    <button id="carousel-prev" class="text-5xl px-4 hover:scale-105">◀</button>
-    <span>━━━</span>
-    <button id="carousel-next" class="text-5xl px-4 hover:scale-105">▶</button>
-  </div>
-
+<div class="relative">
   <div
     id="carousel"
     class:list={[
@@ -17,6 +11,13 @@
     ]}
   >
     <slot />
+  </div>
+
+  <div
+    class="absolute top-0 left-0 right-0 flex gap-8 justify-between items-center"
+  >
+    <button id="carousel-prev" class="text-5xl hover:scale-105">◀</button>
+    <button id="carousel-next" class="text-5xl hover:scale-105">▶</button>
   </div>
 </div>
 
