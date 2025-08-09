@@ -2,15 +2,16 @@
 import PageLayout from "../layouts/page-layout.astro";
 import Heading from "../components/heading.astro";
 import Chart from "../components/chart.astro";
+import Carousell from "../components/carousell.astro";
 ---
 
 <PageLayout>
   <Heading class="text-center fade">Stats</Heading>
-  <div class="grid gap-24 py-8 sm:p16">
-    <Chart label="Last week" listenTo="chart:week" class="fade" />
-    <Chart label="Last month" listenTo="chart:month" class="fade" />
-    <Chart label="Last year" listenTo="chart:year" class="fade" />
-  </div>
+  <Carousell>
+    <Chart label="Last week" listenTo="chart:week" />
+    <Chart label="Last month" listenTo="chart:month" />
+    <Chart label="Last year" listenTo="chart:year" />
+  </Carousell>
 </PageLayout>
 
 <style>

@@ -5,20 +5,23 @@ type Props = astroHTML.JSX.CanvasHTMLAttributes & {
   label: string;
   listenTo: string;
 };
+
 const { label, class: classes, listenTo, ...canvasProps } = Astro.props;
 ---
 
-<label class:list={["grid gap-6 text-shadow-md", classes]}>
-  <p class="text-5xl text-center">{label}</p>
+<label
+  class:list={["grid grid-cols-[minmax(0,1fr)] gap-8 text-shadow-md", classes]}
+>
+  <div>
+    <p class="text-5xl text-center">{label}</p>
+  </div>
   <div class="grid gap-2">
     <div class="grid grid-cols-2 gap-4">
       <Stat label="Average" content="6.5" />
       <Stat label="Trend" content="+20%" />
     </div>
-    <canvas
-      {...canvasProps}
-      class="rounded-sm w-full fade"
-      data-listen-to={listenTo}></canvas>
+    <canvas {...canvasProps} class="rounded-sm w-full" data-listen-to={listenTo}
+    ></canvas>
   </div>
 </label>
 

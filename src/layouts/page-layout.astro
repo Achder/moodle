@@ -15,7 +15,7 @@ const isProduction = import.meta.env.MODE === "production";
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
@@ -45,7 +45,9 @@ const isProduction = import.meta.env.MODE === "production";
 
   <body class="font-bold text-dark bg-brand overflow-x-hidden">
     <main
-      class="max-w-lg mx-auto p-4 grid gap-8 min-h-dvh grid-rows-[auto_1fr_auto]"
+      class:list={[
+        "max-w-lg sm:max-w-3xl mx-auto p-4 grid gap-8 min-h-dvh grid-rows-[auto_1fr_auto]",
+      ]}
     >
       <div class="flex justify-between items-center">
         <StyledLink href="/" aria-label="Go to the landing page"
@@ -64,7 +66,7 @@ const isProduction = import.meta.env.MODE === "production";
         </div>
       </div>
 
-      <div class="grid gap-8 content-start">
+      <div class="grid gap-8 content-start grid-cols-[minmax(0,1fr)]">
         <slot />
       </div>
 
