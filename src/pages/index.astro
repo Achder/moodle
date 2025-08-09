@@ -7,8 +7,10 @@ import Button from "../components/button.astro";
 ---
 
 <PageLayout>
-  <Heading class="fade">Moodle</Heading>
-  <Rating id="rating-number" class="fade">0</Rating>
+  <div class="grid gap-4">
+    <Heading class="fade">Moodle</Heading>
+    <Rating id="rating-number" class="fade">0</Rating>
+  </div>
   <Heading id="feedback" class="fade-feedback" />
 
   <form class="grid gap-8" id="rating-form">
