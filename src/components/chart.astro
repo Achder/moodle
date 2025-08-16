@@ -149,7 +149,7 @@ const { label, class: classes, listenTo, ...canvasProps } = Astro.props;
 
     // percent change
     const percent = ((averageThis - averagePrevious) / averagePrevious) * 100;
-    return `${percent}%`;
+    return `${percent.toFixed(0)}%`;
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
