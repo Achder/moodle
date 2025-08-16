@@ -1,0 +1,56 @@
+---
+import PageLayout from "../layouts/page-layout.astro";
+import Heading from "../components/heading.astro";
+---
+
+<PageLayout>
+  <Heading class="text-center fade">History</Heading>
+  <div
+    id="history"
+    class="grid grid-cols-[auto_auto_minmax(0,1fr)] gap-x-8 gap-y-1 text-sm"
+  >
+    <p class="text-xl">Date</p>
+    <p class="text-xl">Rating</p>
+    <p class="text-xl">Notes</p>
+  </div>
+</PageLayout>
+
+<style>
+  .fade {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  import { format } from "date-fns";
+  import { db } from "../utils/db";
+  import { fade } from "../utils/animation";
+  import { hi } from "date-fns/locale";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    fade(".fade", {
+      startOffset: -50,
+    });
+
+    const history = document.getElementById("history");
+    if (!history) {
+      console.error("History element not found");
+      return;
+    }
+
+    const ratings = await db.ratings.toArray();
+    ratings.map((rating) => {
+      const colDate = document.createElement("p");
+      const colRating = document.createElement("p");
+      const colNotes = document.createElement("p");
+
+      colDate.textContent = format(rating.date, "dd.MM.yyyy", { locale: hi });
+      colRating.textContent = rating.rating.toString();
+      colNotes.textContent = rating.notes ?? "";
+
+      history.appendChild(colDate);
+      history.appendChild(colRating);
+      history.appendChild(colNotes);
+    });
+  });
+</script>

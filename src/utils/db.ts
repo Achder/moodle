@@ -20,6 +20,7 @@ db.version(1).stores({
   ratings: "date, rating, notes", // primary key "id" (for the runtime!)
 });
 
-export interface ChartEventDetail {
-  ratings: Rating[];
-}
+export type ChartEventDetail = {
+  thisPeriod: Rating[];
+  previousPeriod: Rating[];
+};

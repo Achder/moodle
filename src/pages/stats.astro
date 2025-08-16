@@ -30,43 +30,66 @@ import Carousell from "../components/carousell.astro";
       startOffset: -50,
     });
 
-    function dispatch(type: string, ratings: Rating[]) {
+    function dispatch(
+      type: string,
+      thisPeriod: Rating[],
+      previousPeriod: Rating[]
+    ) {
       window.dispatchEvent(
         new CustomEvent<ChartEventDetail>(type, {
           detail: {
-            ratings,
+            thisPeriod,
+            previousPeriod,
           },
         })
       );
     }
 
-    const today = new Date();
-    const oneWeekAgo = subWeeks(today, 1);
-    const oneMonthAgo = subMonths(today, 1);
-    const oneYearAgo = subYears(today, 1);
+    function formatDate(date: Date): string {
+      return format(date, "yyyy-MM-dd");
+    }
 
-    const todayFormatted = format(today, "yyyy-MM-dd");
-    const oneWeekAgoFormatted = format(oneWeekAgo, "yyyy-MM-dd");
-    const oneMonthAgoFormatted = format(oneMonthAgo, "yyyy-MM-dd");
-    const oneYearAgoFormatted = format(oneYearAgo, "yyyy-MM-dd");
+    const today = new Date();
+    const todayFormatted = formatDate(today);
+    const oneWeekAgo = formatDate(subWeeks(today, 1));
+    const twoWeekAgo = formatDate(subWeeks(today, 2));
+    const oneMonthAgo = formatDate(subMonths(today, 1));
+    const twoMonthAgo = formatDate(subMonths(today, 2));
+    const oneYearAgo = formatDate(subYears(today, 1));
+    const twoYearAgo = formatDate(subYears(today, 2));
 
     const lastWeek = await db.ratings
       .where("date")
-      .between(oneWeekAgoFormatted, todayFormatted, true, true)
+      .between(oneWeekAgo, todayFormatted, true, true)
+      .toArray();
+
+    const secondLastWeek = await db.ratings
+      .where("date")
+      .between(twoWeekAgo, oneWeekAgo, true, true)
       .toArray();
 
     const lastMonth = await db.ratings
       .where("date")
-      .between(oneMonthAgoFormatted, todayFormatted, true, true)
+      .between(oneMonthAgo, today, true, true)
+      .toArray();
+
+    const secondLastMonth = await db.ratings
+      .where("date")
+      .between(twoMonthAgo, oneMonthAgo, true, true)
       .toArray();
 
     const lastYear = await db.ratings
       .where("date")
-      .between(oneYearAgoFormatted, todayFormatted, true, true)
+      .between(oneYearAgo, today, true, true)
       .toArray();
 
-    dispatch("chart:week", lastWeek);
-    dispatch("chart:month", lastMonth);
-    dispatch("chart:year", lastYear);
+    const secondLastYear = await db.ratings
+      .where("date")
+      .between(twoYearAgo, oneYearAgo, true, true)
+      .toArray();
+
+    dispatch("chart:week", lastWeek, secondLastWeek);
+    dispatch("chart:month", lastMonth, secondLastMonth);
+    dispatch("chart:year", lastYear, secondLastYear);
   });
 </script>

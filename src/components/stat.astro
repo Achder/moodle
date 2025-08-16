@@ -3,11 +3,11 @@ type Props = astroHTML.JSX.HTMLAttributes & {
   label: string;
   content: string;
 };
-const { class: classes, label, content, ...buttonProps } = Astro.props;
+const { class: classes, label, content, ...rest } = Astro.props;
 ---
 
 <div
-  {...buttonProps}
+  {...rest}
   class:list={[
     "-outline-offset-8 outline-4 bg-dark text-brand py-4 px-10 rounded-full shadow-lg",
     classes,
