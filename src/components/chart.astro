@@ -133,6 +133,10 @@ const { label, class: classes, listenTo, ...canvasProps } = Astro.props;
 
     let total = 0;
     for (const r of ratings) {
+      if (r.rating === null) {
+        continue;
+      }
+
       total += r.rating;
     }
 
@@ -200,12 +204,12 @@ const { label, class: classes, listenTo, ...canvasProps } = Astro.props;
         averageElement.textContent = average.toFixed(1);
         trendElement.textContent = trend;
 
-        const labels = thisPeriod.map((r) => format(r.date, "MM.dd"));
+        const labels = thisPeriod.map((r) => format(r.date, "dd.MM.yy"));
         const ratingValues = thisPeriod.map((r) => r.rating);
 
         console.log("Updating chart data:", { labels, ratingValues });
         chart.data.labels = labels;
-        chart.data.datasets[0].data = ratingValues;
+        chart.data.datasets[0].data = ratingValues.map((r) => r ?? 0);
         chart.update();
       });
     }

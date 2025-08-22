@@ -5,7 +5,7 @@ export const DateSchema = z.string().date();
 
 export const RatingSchema = z.object({
   date: DateSchema,
-  rating: z.coerce.number(),
+  rating: z.coerce.number().nullable(),
   notes: z.string().optional(),
 });
 

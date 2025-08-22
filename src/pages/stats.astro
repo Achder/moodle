@@ -21,7 +21,7 @@ import Carousell from "../components/carousell.astro";
 </style>
 
 <script>
-  import { format, subMonths, subWeeks, subYears } from "date-fns";
+  import { format, subMonths, subWeeks, subYears, addDays } from "date-fns";
   import { db, type ChartEventDetail, type Rating } from "../utils/db";
   import { fade } from "../utils/animation";
 
@@ -49,6 +49,29 @@ import Carousell from "../components/carousell.astro";
       return format(date, "yyyy-MM-dd");
     }
 
+    // helper: given DB results and a start/end date, return one entry per day
+    function fillMissingDates(
+      ratings: Rating[],
+      startFormatted: string,
+      endFormatted: string
+    ): Rating[] {
+      const map = Object.fromEntries(ratings.map((r) => [r.date, r]));
+      const results: Rating[] = [];
+      let cur = new Date(startFormatted);
+      const end = new Date(endFormatted);
+      while (cur <= end) {
+        const d = formatDate(cur);
+        if (map[d]) {
+          results.push(map[d]);
+        } else {
+          // create an "empty" rating for missing dates (rating null)
+          results.push({ date: d, rating: null } as Rating);
+        }
+        cur = addDays(cur, 1);
+      }
+      return results;
+    }
+
     const today = new Date();
     const todayFormatted = formatDate(today);
     const oneWeekAgo = formatDate(subWeeks(today, 1));
@@ -58,35 +81,58 @@ import Carousell from "../components/carousell.astro";
     const oneYearAgo = formatDate(subYears(today, 1));
     const twoYearAgo = formatDate(subYears(today, 2));
 
-    const lastWeek = await db.ratings
+    // fetch raw data, then fill gaps
+    const rawLastWeek = await db.ratings
       .where("date")
       .between(oneWeekAgo, todayFormatted, true, true)
       .toArray();
-
-    const secondLastWeek = await db.ratings
+    const rawSecondLastWeek = await db.ratings
       .where("date")
       .between(twoWeekAgo, oneWeekAgo, true, true)
       .toArray();
 
-    const lastMonth = await db.ratings
+    const rawLastMonth = await db.ratings
       .where("date")
       .between(oneMonthAgo, todayFormatted, true, true)
       .toArray();
-
-    const secondLastMonth = await db.ratings
+    const rawSecondLastMonth = await db.ratings
       .where("date")
       .between(twoMonthAgo, oneMonthAgo, true, true)
       .toArray();
 
-    const lastYear = await db.ratings
+    const rawLastYear = await db.ratings
       .where("date")
       .between(oneYearAgo, todayFormatted, true, true)
       .toArray();
-
-    const secondLastYear = await db.ratings
+    const rawSecondLastYear = await db.ratings
       .where("date")
       .between(twoYearAgo, oneYearAgo, true, true)
       .toArray();
+
+    const lastWeek = fillMissingDates(rawLastWeek, oneWeekAgo, todayFormatted);
+    const secondLastWeek = fillMissingDates(
+      rawSecondLastWeek,
+      twoWeekAgo,
+      oneWeekAgo
+    );
+
+    const lastMonth = fillMissingDates(
+      rawLastMonth,
+      oneMonthAgo,
+      todayFormatted
+    );
+    const secondLastMonth = fillMissingDates(
+      rawSecondLastMonth,
+      twoMonthAgo,
+      oneMonthAgo
+    );
+
+    const lastYear = fillMissingDates(rawLastYear, oneYearAgo, todayFormatted);
+    const secondLastYear = fillMissingDates(
+      rawSecondLastYear,
+      twoYearAgo,
+      oneYearAgo
+    );
 
     dispatch("chart:week", lastWeek, secondLastWeek);
     dispatch("chart:month", lastMonth, secondLastMonth);
