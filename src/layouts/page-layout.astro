@@ -19,8 +19,8 @@ const isProduction = import.meta.env.MODE === "production";
     <meta name="generator" content={Astro.generator} />
 
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/favicon.ico" color="oklch(0.85 0.2 84.36)" />
-    <meta name="theme-color" content="oklch(0.85 0.2 84.36)" />
+    <link rel="mask-icon" href="/favicon.ico" color="#ffc000" />
+    <meta name="theme-color" content="#ffc000" />
     <meta name="description" content="Moodle - The Mood Tracker" />
 
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
