@@ -70,7 +70,7 @@ import Carousell from "../components/carousell.astro";
 
     const lastMonth = await db.ratings
       .where("date")
-      .between(oneMonthAgo, today, true, true)
+      .between(oneMonthAgo, todayFormatted, true, true)
       .toArray();
 
     const secondLastMonth = await db.ratings
@@ -80,7 +80,7 @@ import Carousell from "../components/carousell.astro";
 
     const lastYear = await db.ratings
       .where("date")
-      .between(oneYearAgo, today, true, true)
+      .between(oneYearAgo, todayFormatted, true, true)
       .toArray();
 
     const secondLastYear = await db.ratings
