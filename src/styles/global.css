@@ -2,7 +2,7 @@
 
 @theme {
   --color-bad: oklch(69.226% 0.3069 52.643);
-  --color-mid: oklch(0.85 0.2 84.36);
+  --color-mid: #ffc000;
   --color-good: oklch(0.85 0.37 145.71);
 
   --color-brand: var(--color-mid);

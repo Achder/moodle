@@ -78,12 +78,12 @@ import Button from "../components/button.astro";
       const bad = new Color(rootStyle.getPropertyValue("--color-bad"));
       const mid = new Color(rootStyle.getPropertyValue("--color-mid"));
       const good = new Color(rootStyle.getPropertyValue("--color-good"));
-      const bg = mixN([bad, mid, good], t, "oklch", "oklch");
+      const bg = mixN([bad, mid, good], t, "oklch", "srgb");
 
-      setThemeColor(bg.toString());
+      setThemeColor(bg.toString({ format: "hex" }));
       document.documentElement.style.setProperty(
         "--color-brand",
-        bg.toString()
+        bg.toString({ format: "hex" })
       );
     });
   }
