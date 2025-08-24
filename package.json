@@ -9,7 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^4.3.0",
     "@tailwindcss/vite": "^4.1.12",
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.13.2",
     "chart.js": "^4.5.0",
@@ -17,6 +20,8 @@
     "date-fns": "^4.1.0",
     "dexie": "^4.0.11",
     "gsap": "^3.13.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "tailwindcss": "^4.1.12",
     "vite-plugin-qrcode": "^0.3.0"
   },
