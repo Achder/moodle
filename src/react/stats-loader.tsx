@@ -54,7 +54,6 @@ export function StatsLoader() {
         .where("date")
         .between(oneWeekAgo, todayFormatted, true, true)
         .toArray();
-
       const rawSecondLastWeek = await db.ratings
         .where("date")
         .between(twoWeekAgo, oneWeekAgo, true, true)
@@ -82,10 +81,12 @@ export function StatsLoader() {
       setSecondLastWeek(
         fillMissingDates(rawSecondLastWeek, twoWeekAgo, oneWeekAgo)
       );
+
       setLastMonth(fillMissingDates(rawLastMonth, oneMonthAgo, todayFormatted));
       setSecondLastMonth(
         fillMissingDates(rawSecondLastMonth, twoMonthAgo, oneMonthAgo)
       );
+
       setLastYear(fillMissingDates(rawLastYear, oneYearAgo, todayFormatted));
       setSecondLastYear(
         fillMissingDates(rawSecondLastYear, twoYearAgo, oneYearAgo)
