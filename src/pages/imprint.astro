@@ -7,7 +7,7 @@ import Heading from "../components/heading.astro";
 <PageLayout
   description="Imprint including address and contact info, as well as links to social media and job platforms."
 >
-  <Heading class="fade">Who?</Heading>
+  <Heading>Who?</Heading>
 
   <div class="grid text-md py-4">
     <p class="text-2xl font-bold">Thomas Meerpohl</p>
@@ -38,14 +38,3 @@ import Heading from "../components/heading.astro";
     <StyledLink href="https://github.com/Achder">Github</StyledLink>
   </div>
 </PageLayout>
-
-<script>
-  import { fade } from "../utils/animation";
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    fade(".fade", {
-      startOffset: -50,
-      duration: 0.3,
-    });
-  });
-</script>

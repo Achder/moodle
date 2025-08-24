@@ -4,7 +4,7 @@ import Heading from "../components/heading.astro";
 ---
 
 <PageLayout>
-  <Heading class="text-center fade">History</Heading>
+  <Heading class="text-center">History</Heading>
   <div
     id="history"
     class="grid grid-cols-[auto_auto_minmax(0,1fr)] gap-x-8 gap-y-1 text-sm"
@@ -15,23 +15,12 @@ import Heading from "../components/heading.astro";
   </div>
 </PageLayout>
 
-<style>
-  .fade {
-    opacity: 0;
-  }
-</style>
-
 <script>
   import { format } from "date-fns";
   import { db } from "../utils/db";
-  import { fade } from "../utils/animation";
   import { hi } from "date-fns/locale";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    fade(".fade", {
-      startOffset: -50,
-    });
-
     const history = document.getElementById("history");
     if (!history) {
       console.error("History element not found");
@@ -45,7 +34,7 @@ import Heading from "../components/heading.astro";
       const colNotes = document.createElement("p");
 
       colDate.textContent = format(rating.date, "dd.MM.yyyy", { locale: hi });
-      colRating.textContent = rating.rating.toString();
+      colRating.textContent = rating.rating?.toString() ?? "0";
       colNotes.textContent = rating.notes ?? "";
 
       history.appendChild(colDate);

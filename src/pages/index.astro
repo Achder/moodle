@@ -13,7 +13,7 @@ import Button from "../components/button.astro";
   </div>
   <Heading id="feedback" class="fade-feedback" />
 
-  <form class="grid gap-8" id="rating-form">
+  <form class="grid gap-4" id="rating-form">
     <fieldset class="grid gap-2">
       <Input
         id="rating"
@@ -108,7 +108,7 @@ import Button from "../components/button.astro";
         setInput(notes, "", "input");
         submit.textContent = "Save";
       } else {
-        setInput(rating, data.rating.toString(), "input");
+        setInput(rating, data.rating?.toString() ?? "0", "input");
         setInput(notes, data.notes ?? "", "input");
         submit.textContent = "Edit";
       }
@@ -176,7 +176,9 @@ import Button from "../components/button.astro";
 
       await db.ratings.put(inputs.data);
 
-      if (inputs.data.rating < 3) {
+      if (!inputs.data.rating) {
+        return;
+      } else if (inputs.data.rating < 3) {
         feedback.textContent = "Sorry...";
       } else if (inputs.data.rating > 7) {
         feedback.textContent = "Nice!";
