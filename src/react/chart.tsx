@@ -71,8 +71,6 @@ export function Chart(props: Props) {
     const labels = curRatings.map((r) => format(r.date, "dd.MM.yy"));
     const ratingValues = curRatings.map((r) => r.rating ?? 0);
 
-    console.log(ratingValues);
-
     const dark = getCssColor("--color-dark").toString();
     chartRef.current = new Chartjs<"bar", number[]>(canvasRef.current, {
       type: "bar",
