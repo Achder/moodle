@@ -122,6 +122,11 @@ export function Chart(props: Props) {
             },
             ticks: {
               color: dark,
+              minRotation: 60,
+              maxRotation: 90,
+              font: {
+                size: 10,
+              },
             },
             border: {
               display: false,
